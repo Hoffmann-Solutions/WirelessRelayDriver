@@ -34,9 +34,13 @@ uint8_t EEMEM Mode;
 
 #define NRF24L01_CE_PORT	PORTB
 #define NRF24L01_CE_PIN		1
-
+//Define some constants
 #define OUTPUT				(uint8_t) 1
 #define INPUT				(uint8_t) 0
+
+//Memory locations for pair code and mode
+#define PAIRCODE_EE_ADDR	(uint8_t) 0x00
+#define MODE_EE_ADDR		(uint8_t) 0x01
 
 #define OUTPUT_PORT			PORTD
 #define OUTPUT_DDR			DDRD
