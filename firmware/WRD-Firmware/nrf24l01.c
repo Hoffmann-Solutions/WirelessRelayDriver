@@ -23,10 +23,15 @@
  * 1:	PWR_UP						[1: PWR UP, 0: PWR DOWN]
  * 0:	PRIM_RX						RX/TX Control [1: PRX, 0: PTX]
  */
-#define	EN_CRC						(uint8_t)(0x03)
-#define	PWR_UP						(uint8_t)(0x01)
-#define PRIM_RX						(uint8_t)(0x00)
+#define	EN_CRC						(uint8_t)3
+#define	PWR_UP						(uint8_t)1
+#define PRIM_RX						(uint8_t)0
 
+#define EN_AA_REG 					(uint8_t)0x01
+#define EN_RXADDR_REG				(uint8_t)0x02
+#define SETUP_RETR_REG				(uint8_t)0x04
+#define RF_CH_REG					(uint8_t)0x05
+#define RF_SETUP_REG				(uint8_t)0x06			
 //Status register
 #define STATUS_REG					(uint8_t)(0x07)
 
@@ -40,15 +45,14 @@
  * 1:	RX_P_NO[1]					[1: PWR UP, 0: PWR DOWN]
  * 0:	TX_FULL						TX_FIFO full
  */
-#define RX_DR						(uint8_t)(6)
-#define TX_DS						(uint8_t)(5)
-#define MAX_RT						(uint8_t)(4)
-#define TX_FULL						(uint8_t)(0)
+#define RX_DR						(uint8_t)6
+#define TX_DS						(uint8_t)5
+#define MAX_RT						(uint8_t)4
+#define TX_FULL						(uint8_t)0
 
-#define EN_AA_REG 					(uint8_t)0x01
-#define EN_RXADDR_REG				(uint8_t)0x02
-#define SETUP_RETR_REG				(uint8_t)0x04
-#define RX_PW_P0					(uint8_t)0x11
+#define RX_ADDR_P0
+
+#define RX_PW_P0_REG				(uint8_t)0x11
 
 //Local buffers used for the tx and rx transactions
 uint8_t txBuff[TX_RX_BUFF_LEN];
@@ -79,7 +83,7 @@ void nrf24l01_setup_tx(void){
 	clear(txBuff);
 	clear(rxBuff);
 	//Set the write mask and then set number of payload len
-	txBuff[0]=(W_MASK|RX_PW_P0);
+	txBuff[0]=(W_MASK|RX_PW_P0_REG);
 	txBuff[1]=(NRF24L01_PAYLOAD_LEN);
 	nrf24l01_csn_low();
 	spi_transmit_receive(txBuff, rxBuff, 2);
@@ -122,7 +126,7 @@ void nrf24l01_setup_rx(void){
 	clear(rxBuff);
 	
 	//Set the write mask and then set number of payload len
-	txBuff[0]=(W_MASK|RX_PW_P0);
+	txBuff[0]=(W_MASK|RX_PW_P0_REG);
 	txBuff[1]=(NRF24L01_PAYLOAD_LEN);
 	nrf24l01_csn_low();
 	spi_transmit_receive(txBuff, rxBuff, 2);

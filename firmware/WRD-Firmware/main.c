@@ -10,71 +10,11 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
+#include "main.h"
 #include "nrf24l01.h"
 
-//Define the mode of operation here
-#define _TX 1
-
-//Used to distinguish if the message was for us
-uint8_t EEMEM PairCode;
-uint8_t EEMEM Mode;
-
-//Will initially be undefined
-#define MODE_TX			(uint8_t)1
-#define MODE_RX			(uint8_t)2
-
-
-//Define the pins needed for the spi interface
-#define DDR_SPI DDRB
-#define DD_MOSI 3
-#define DD_MISO	4
-#define DD_SCK	5
-#define DD_SS	2
-#define DD_SS2  1
-
-#define NRF24L01_CE_PORT	PORTB
-#define NRF24L01_CE_PIN		1
-//Define some constants
-#define OUTPUT				(uint8_t) 1
-#define INPUT				(uint8_t) 0
-
-//Memory locations for pair code and mode
-#define PAIRCODE_EE_ADDR	(uint8_t) 0x00
-#define MODE_EE_ADDR		(uint8_t) 0x01
-
-#define OUTPUT_PORT			PORTD
-#define OUTPUT_DDR			DDRD
-
-//Define some macros to clear and set bits on a port
-#define setbit(port, bit)		(port) |= (1<< (bit))
-#define clearbit(port, bit)		(port) &= ~(1<<(bit))
-//Define unsigned char as uint8_t
-typedef unsigned char uint8_t;
-
-//Initialise the spi
-void spi_init(void);
-//Transmit a single char
-void spi_transmit(char cData);
-//Transmit and receive a number of bytes
-void spi_transmit_receive(uint8_t *txBuff, uint8_t *rxBuff, uint8_t numBytes);
-
-//Enable and disable the nrf24l01 module
-void nrf24l01_ce_low();			//Activate RX TX modes functions required by the nrf24l01 lib
-void nrf24l01_ce_high();
-
-void nrf24l01_csn_low();		//SPI Chip Select functions required by nrf24l01 lib
-void nrf24l01_csn_high();
-
-void wait_10us();				//Wait function required by the nrf24l01 lib
-
-//Set the port c for input or output depending on the mode that the module is in
-void setup_portd_gpio(uint8_t mode);
-
-uint8_t read_portd_gpio();
-void set_portd_gpio(uint8_t value);
 
 int status = 0;
-
 
 int main(void)
 {
@@ -308,15 +248,15 @@ void setup_portd_gpio(uint8_t mode){
 
 uint8_t read_portd_gpio(){
 	uint8_t val = 0;
-	//Read the lower 4 pins
-	val = PIND & 0b00001111;
+	//Read the lower 5 pins
+	val = PIND & 0b00011111;
 	return val;
 }
 
 void set_portd_gpio(uint8_t value){
-	//Set the lower 4 bits of portc, ensure no data is entered for upper 4
-	value = value&0x0f;	//Clear the top bits just in case
-	PORTD = ((PORTD&0xf0)|(value));
+	//Set the lower 5 bits of portc, ensure no data is entered for upper 3
+	value = value&0x1F;	//Clear the top bits just in case
+	PORTD = ((PORTD&0xE0)|(value));
 	
 }
 
