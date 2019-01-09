@@ -9,7 +9,7 @@ typedef struct {
 }initNRF24l01_t;
 
 //Enum typedef to store the available pipes
-typedef enum {pipe0, pipe1, pipe2, piep3, pipe4, pipe5, pipe6} PipeNum_t;
+typedef enum {pipe0, pipe1, pipe2, pipe3, pipe4, pipe5} PipeNum_t;
 
 #define clear(x)	memset((x), 0, sizeof((x)))
 

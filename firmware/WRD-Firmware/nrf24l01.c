@@ -61,12 +61,12 @@
 #define MAX_RT						(uint8_t)4
 #define TX_FULL						(uint8_t)0
 //Address registers
-#define RX_ADDR_P0					(uint8_t)0A
-#define RX_ADDR_P1					(uint8_t)0B
-#define RX_ADDR_P2					(uint8_t)0C
-#define RX_ADDR_P3					(uint8_t)0D
-#define RX_ADDR_P4					(uint8_t)0E
-#define RX_ADDR_P5					(uint8_t)0F
+#define RX_ADDR_P0					(uint8_t)0x0A
+#define RX_ADDR_P1					(uint8_t)0x0B
+#define RX_ADDR_P2					(uint8_t)0x0C
+#define RX_ADDR_P3					(uint8_t)0x0D
+#define RX_ADDR_P4					(uint8_t)0x0E
+#define RX_ADDR_P5					(uint8_t)0x0F
 
 #define RX_PW_P0_REG				(uint8_t)0x11
 
@@ -338,25 +338,25 @@ void nrf24l01EnablePipe(PipeNum_t pipeNum){
 	clear(rxBuff);
 	
 	//Set up the config data to send
-	txBuff[0] = (W_MASK)|EN_RXADDR);
+	txBuff[0] = (W_MASK)|(EN_RXADDR_REG);
 	switch(pipeNum){
 		case pipe0:
-			txBuff[1]=1<<0;
+			txBuff[1]=1<<ENRX_P0;
 		break;
 		case pipe1:
-			txBuff[1]=1<<1;
+			txBuff[1]=1<<ENRX_P1;
 		break;
 		case pipe2:
-			txBuff[1]=1<<2;
+			txBuff[1]=1<<ENRX_P2;
 		break;
 		case pipe3:
-			txBuff[1]=1<<3;
+			txBuff[1]=1<<ENRX_P3;
 		break;
 		case pipe4:
-			txBuff[1]=1<<4;
+			txBuff[1]=1<<ENRX_P4;
 		break;
 		case pipe5:
-			txBuff[1]=1<<5;
+			txBuff[1]=1<<ENRX_P5;
 		break;
 	};
 	
@@ -374,7 +374,7 @@ void nrf24l01SetPipeAddr(PipeNum_t pipeNum, uint8_t addr){
 	
 	switch(pipeNum){
 		case pipe0:
-			txBuff[0] = (w_MASK)|(RX_ADDR_P0);
+			txBuff[0] = (W_MASK)|(RX_ADDR_P0);
 			addrLen = 5;
 			break;
 		case pipe1:
@@ -405,8 +405,5 @@ void nrf24l01SetPipeAddr(PipeNum_t pipeNum, uint8_t addr){
 	nrf24l01_csn_low();
 	spi_transmit_receive(txBuff, rxBuff, 1+addrLen);
 	nrf24l01_csn_high();
-	
-	
-	
 	
 }
