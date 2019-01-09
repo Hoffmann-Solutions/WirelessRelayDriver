@@ -35,6 +35,10 @@
 #define ENRX_P2						(uint8_t)2
 #define ENRX_P1						(uint8_t)1
 #define ENRX_P0						(uint8_t)0
+//Address to set the Address widths
+#define SETUP_AW_REG				(uint8_t)0x03
+#define AW_1						(uint8_t)1
+#define AW_0						(uint8_t)0
 
 #define SETUP_RETR_REG				(uint8_t)0x04
 #define RF_CH_REG					(uint8_t)0x05
@@ -366,5 +370,43 @@ void nrf24l01EnablePipe(PipeNum_t pipeNum){
 void nrf24l01SetPipeAddr(PipeNum_t pipeNum, uint8_t addr){
 	clear(txBuff);
 	clear(rxBuff);
-	/**********************************TO DO*****************************/
+	int addrLen = 0;
+	
+	switch(pipeNum){
+		case pipe0:
+			txBuff[0] = (w_MASK)|(RX_ADDR_P0);
+			addrLen = 5;
+			break;
+		case pipe1:
+			txBuff[0] = (W_MASK)|(RX_ADDR_P1);
+			addrLen = 5;
+		break;
+		case pipe2:
+			txBuff[0] = (W_MASK)|(RX_ADDR_P2);
+			addrLen = 1;
+		break;
+		case pipe3:
+			txBuff[0] = (W_MASK)|(RX_ADDR_P3);
+			addrLen = 1;
+		break;
+		case pipe4:
+			txBuff[0] = (W_MASK)|(RX_ADDR_P4);
+			addrLen = 1;
+		break;
+		case pipe5:
+			txBuff[0] = (W_MASK)|(RX_ADDR_P5);
+			addrLen = 1;
+		break;
+	};
+	
+	//load in the addr
+	txBuff[1] = addr;
+	
+	nrf24l01_csn_low();
+	spi_transmit_receive(txBuff, rxBuff, 1+addrLen);
+	nrf24l01_csn_high();
+	
+	
+	
+	
 }
