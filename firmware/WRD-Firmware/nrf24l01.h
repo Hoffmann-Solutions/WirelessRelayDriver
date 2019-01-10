@@ -2,8 +2,7 @@
 #define NRF24L01_H
 
 #include <string.h>
-
-typedef unsigned char uint8_t;
+#include <avr/io.h>
 
 //Enum typedef to store the available pipes
 typedef enum pipeType{pipe0, pipe1, pipe2, pipe3, pipe4, pipe5} PipeNum_t;
@@ -24,7 +23,7 @@ extern void wait_10us();
 
 extern void spi_init();
 extern void spi_transmit(char cData);
-extern void spi_transmit_receive(uint8_t *txBuff, uint8_t *rxBuff, uint8_t numBytes);
+extern void spi_transmit_receive(uint8_t *txBuff, char *buff, uint8_t numBytes);
 
 /*******************Includes************************/
 
@@ -85,7 +84,7 @@ uint8_t nrf24l01_read_reg(uint8_t reg, uint8_t *buff, uint8_t numBytes);
 			uint8_t numBytes:	Number of bytes to read
  * @retval	None
  */
-uint8_t nrf24l01_read_rx(uint8_t *buff, uint8_t numBytes);
+uint8_t nrf24l01_read_rx(char *buff, uint8_t numBytes);
 
 /**
  * @brief	This function is used to reset IRQ flags and to clear the TX buffer, used when a MAX_RT error

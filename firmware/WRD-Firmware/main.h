@@ -49,14 +49,14 @@ uint8_t EEMEM MODE = MODE_PRX;
 #define setbit(port, bit)		(port) |= (1<< (bit))
 #define clearbit(port, bit)		(port) &= ~(1<<(bit))
 //Define unsigned char as uint8_t
-typedef unsigned char uint8_t;
+
 
 //Initialise the spi
 void spi_init(void);
 //Transmit a single char
 void spi_transmit(char cData);
 //Transmit and receive a number of bytes
-void spi_transmit_receive(uint8_t *txBuff, uint8_t *rxBuff, uint8_t numBytes);
+void spi_transmit_receive(uint8_t *txBuff, char *buff, uint8_t numBytes);
 
 //Enable and disable the nrf24l01 module
 void nrf24l01_ce_low();			//Activate RX TX modes functions required by the nrf24l01 lib
@@ -75,7 +75,7 @@ void set_portd_gpio(uint8_t value);
 
 
 
-void handlePTX(uint8_t *txBuff, uint8_t *rxBuff);
+void handlePTX();
 
 void handlePRX();
 
