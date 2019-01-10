@@ -9,7 +9,7 @@ typedef struct {
 }initNRF24l01_t;
 
 //Enum typedef to store the available pipes
-typedef enum {pipe0, pipe1, pipe2, pipe3, pipe4, pipe5} PipeNum_t;
+typedef enum pipeType{pipe0, pipe1, pipe2, pipe3, pipe4, pipe5} PipeNum_t;
 
 #define clear(x)	memset((x), 0, sizeof((x)))
 
@@ -122,5 +122,35 @@ void nrf24l01EnablePipe(PipeNum_t pipeNum);
  * @param PipeNum_t
  * @retval None
  */
-void nrf24l01SetPipeAddr(PipeNum_t pipeNum, uint8_t addr);
+void nrf24l01SetPipeAddr(PipeNum_t pipeNum, uint8_t *addr, uint8_t numBytes);
+
+/**
+ * \brief This method is used to set the transmitting addr
+ *	used to set the pipe address to transmit to
+ * \param addr
+ * 
+ * \return void
+ */
+void nrf24l01SetTXAddr(uint8_t *addr, uint8_t numBytes);
+
+/**
+ * \brief This method is used to set the payload length
+ * 
+ * \param numBytes
+ * 
+ * \return void
+ */
+void nrf24l01SetPayloadLen(uint8_t numBytes);
+
+
+/**
+ * \brief This method is used to set the number of retries for
+ * when in transmitter mode.
+ * 
+ * \param numRetries
+ * 
+ * \return void
+ */
+void nrf24l01SetNumRetries(uint8_t numRetries);
+
 #endif
