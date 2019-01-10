@@ -4,9 +4,6 @@
 #include <string.h>
 
 typedef unsigned char uint8_t;
-typedef struct {
-
-}initNRF24l01_t;
 
 //Enum typedef to store the available pipes
 typedef enum pipeType{pipe0, pipe1, pipe2, pipe3, pipe4, pipe5} PipeNum_t;

@@ -15,10 +15,11 @@
 
 
 int status = 0;
-uint8_t myMode;
+uint8_t myMode = 0;
 uint8_t pipe0Address[5] = {};
 uint8_t pipe1Address[5] = {};
 uint8_t currPipe = 0;
+uint8_t rxBuff[4]={};
 
 int main(void)
 {
@@ -58,10 +59,10 @@ int main(void)
 	
 	uint8_t sendData = 0;
 	uint8_t txBuff[4];
-	uint8_t rxBuff[4];
-	memset(txBuff, 0, sizeof(txBuff));
-	memset(rxBuff, 0, sizeof(rxBuff));
-
+	
+	clear(txBuff);
+	clear(rxBuff);
+	
     while (1) 
     {
 		//Delay in the loop
@@ -200,14 +201,14 @@ void setup_portd_gpio(uint8_t mode){
 	{
 		case INPUT:
 		//clear the bits for input
-		OUTPUT_DDR &= ~((1<<0)|(1<<1)|(1<<2)|(1<<3));
+		OUTPUT_DDR &= ~((1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4));
 		
 		break;
 		case OUTPUT:
 		//Set the bits for output
-		OUTPUT_DDR |= (1<<0)|(1<<1)|(1<<2)|(1<<3);
+		OUTPUT_DDR |= (1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4);
 		//Set the pins low
-		PIND &= ~((1<<0)|(1<<1)|(1<<2)|(1<<3));
+		PIND &= ~((1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4));
 		break;
 	}
 }
@@ -277,9 +278,12 @@ void handlePTX(uint8_t *txBuff, uint8_t *rxBuff){
 	
 }
 
-void handlePRX(uint8_t *rxBuff){
-	clear(rxBuff);
+void handlePRX(){
 	uint8_t nrf24l01Status = 0x00;
+	uint8_t cmd = 0;
+	uint8_t newAddr = 0;
+	uint8_t newMode = 0;
+	uint8_t relayValues =0;
 	if(!(PINB&0x01)){
 		//something happened
 		nrf24l01Status = nrf24l01_get_status();
@@ -292,18 +296,25 @@ void handlePRX(uint8_t *rxBuff){
 			switch(dataPipeNum){
 				case 0:
 					//Config pipe
-					nrf24l01_read_rx(rxBuff, 3);
+					nrf24l01_read_rx(rxBuff, 2);
+					
+					cmd = rxBuff[0];
+					newAddr = rxBuff[1];
+
 					if(rxBuff[0] == CONFIG_CMD){
 						//Config command received
-						uint8_t newAddr = rxBuff[1];
-						uint8_t newMode = rxBuff[2];
+						status = 99;
 						
+						
+					}else{
+						//Not CMD
+						status =99;
 					}
 					break;
 				case 1:
 					//Data pipe
 					nrf24l01_read_rx(rxBuff, 2);
-					uint8_t relayValues = rxBuff[1];
+					relayValues = rxBuff[1];
 					set_portd_gpio(relayValues);
 					break;
 				default:
