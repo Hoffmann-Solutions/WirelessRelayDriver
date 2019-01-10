@@ -15,7 +15,7 @@
 #define INIT_MODE		(uint8_t)0x00
 	
 //Define the mode of operation here
-#define _TX 1
+#define _RX 1
 
 //Used to distinguish if the message was for us
 uint8_t EEMEM PairCode = INIT_PAIR_CODE;

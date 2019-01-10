@@ -41,8 +41,8 @@ int main(void)
 #ifdef _RX
 	nrf24l01SetPayloadLen(pipe0, 2);
 	nrf24l01SetPayloadLen(pipe1, 2);
-	nrf24l01SetPipeAddr(pipe0, pipe0Address);
-	nrf24l01SetPipeAddr(pipe1, pipe1Address);
+	nrf24l01SetPipeAddr(pipe0, pipe0Address, 5);
+	nrf24l01SetPipeAddr(pipe1, pipe1Address, 5);
 	//Setup for RX mode
 	nrf24l01_setup_rx();
 	nrf24l01_reset_rx();
@@ -84,6 +84,7 @@ int main(void)
 		nrf24l01SetTXAddr(pipe0Address, 5);
 		nrf24l01SetPipeAddr(pipe0, pipe0Address, 5);
 		currPipe=1;
+		//Load the data
 		txBuff[1]=2;
 	}
 
@@ -107,6 +108,8 @@ int main(void)
 		status = 9;
 		nrf24l01_read_reg(0x07, rxBuff, 1);
 	}
+	//*****************Extra delay for debugging
+	_delay_ms(1000);
 	
 #endif // _TX
 		
