@@ -140,7 +140,7 @@ void nrf24l01SetTXAddr(uint8_t *addr, uint8_t numBytes);
  * 
  * \return void
  */
-void nrf24l01SetPayloadLen(uint8_t numBytes);
+void nrf24l01SetPayloadLen(PipeNum_t pipeNum, uint8_t numBytes);
 
 
 /**

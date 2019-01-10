@@ -71,6 +71,12 @@
 #define TX_ADDR_REG					(uint8_t)0x10
 
 #define RX_PW_P0_REG				(uint8_t)0x11
+#define RX_PW_P1_REG				(uint8_t)0x12
+#define RX_PW_P2_REG				(uint8_t)0x13
+#define RX_PW_P3_REG				(uint8_t)0x14
+#define RX_PW_P4_REG				(uint8_t)0x15
+#define RX_PW_P5_REG				(uint8_t)0x16
+
 
 //Local buffers used for the tx and rx transactions
 uint8_t txBuff[TX_RX_BUFF_LEN];
@@ -90,32 +96,32 @@ void nrf24l01_setup_tx(void){
 	nrf24l01_ce_low();
 
 	//Enable the RX address for pipe 0
-	txBuff[0]=(W_MASK)|(EN_RXADDR_REG);
-	txBuff[1]=(1<<0);
-	nrf24l01_csn_low();
-	spi_transmit_receive(txBuff, rxBuff, 2);
-	nrf24l01_csn_high();
+// 	txBuff[0]=(W_MASK)|(EN_RXADDR_REG);
+// 	txBuff[1]=(1<<0);
+// 	nrf24l01_csn_low();
+// 	spi_transmit_receive(txBuff, rxBuff, 2);
+// 	nrf24l01_csn_high();
 
 
 	//clear the buffers
-	clear(txBuff);
-	clear(rxBuff);
-	//Set the write mask and then set number of payload len
-	txBuff[0]=(W_MASK|RX_PW_P0_REG);
-	txBuff[1]=(NRF24L01_PAYLOAD_LEN);
-	nrf24l01_csn_low();
-	spi_transmit_receive(txBuff, rxBuff, 2);
-	nrf24l01_csn_high();
+// 	clear(txBuff);
+// 	clear(rxBuff);
+// 	//Set the write mask and then set number of payload len
+// 	txBuff[0]=(W_MASK|RX_PW_P0_REG);
+// 	txBuff[1]=(NRF24L01_PAYLOAD_LEN);
+// 	nrf24l01_csn_low();
+// 	spi_transmit_receive(txBuff, rxBuff, 2);
+// 	nrf24l01_csn_high();
 
 	//clear the buffers
 	clear(txBuff);
 	clear(rxBuff);
 	//Set the write mask and then set the number of retries
-	txBuff[0]=(W_MASK|SETUP_RETR_REG);
-	txBuff[1]=(0x13);
-	nrf24l01_csn_low();
-	spi_transmit_receive(txBuff, rxBuff, 2);
-	nrf24l01_csn_high();
+// 	txBuff[0]=(W_MASK|SETUP_RETR_REG);
+// 	txBuff[1]=(0x13);
+// 	nrf24l01_csn_low();
+// 	spi_transmit_receive(txBuff, rxBuff, 2);
+// 	nrf24l01_csn_high();
 
 
 	//clear the buffers
@@ -144,21 +150,21 @@ void nrf24l01_setup_rx(void){
 	clear(rxBuff);
 
 	//Set the write mask and then set number of payload len
-	txBuff[0]=(W_MASK|RX_PW_P0_REG);
-	txBuff[1]=(NRF24L01_PAYLOAD_LEN);
-	nrf24l01_csn_low();
-	spi_transmit_receive(txBuff, rxBuff, 2);
-	nrf24l01_csn_high();
+// 	txBuff[0]=(W_MASK|RX_PW_P0_REG);
+// 	txBuff[1]=(NRF24L01_PAYLOAD_LEN);
+// 	nrf24l01_csn_low();
+// 	spi_transmit_receive(txBuff, rxBuff, 2);
+// 	nrf24l01_csn_high();
 
 	//clear the buffers
-	clear(txBuff);
-	clear(rxBuff);
-	//Set the write mask and then set number of payload len
-	txBuff[0]=(W_MASK|EN_RXADDR_REG);
-	txBuff[1]=(1<<0);
-	nrf24l01_csn_low();
-	spi_transmit_receive(txBuff, rxBuff, 2);
-	nrf24l01_csn_high();
+// 	clear(txBuff);
+// 	clear(rxBuff);
+// 	//Set the write mask and then set the pipe
+// 	txBuff[0]=(W_MASK|EN_RXADDR_REG);
+// 	txBuff[1]=(1<<0);
+// 	nrf24l01_csn_low();
+// 	spi_transmit_receive(txBuff, rxBuff, 2);
+// 	nrf24l01_csn_high();
 
 
 	//clear the buffers
@@ -421,12 +427,33 @@ void nrf24l01SetTXAddr(uint8_t *addr, uint8_t numBytes){
 }
 
 
-void nrf24l01SetPayloadLen(uint8_t numBytes){
+void nrf24l01SetPayloadLen(PipeNum_t pipeNum, uint8_t numBytes){
 	//clear the buffers
 	clear(txBuff);
 	clear(rxBuff);
 	//Set the write mask and then set number of payload len
-	txBuff[0]=(W_MASK|RX_PW_P0_REG);
+	switch (pipeNum)
+	{
+	case pipe0:
+		txBuff[0]=(W_MASK|RX_PW_P0_REG);
+		break;
+	case pipe1:
+		txBuff[0]=(W_MASK|RX_PW_P1_REG);
+		break;
+	case pipe2:
+		txBuff[0]=(W_MASK|RX_PW_P2_REG);
+		break;
+	case pipe3:
+		txBuff[0]=(W_MASK|RX_PW_P3_REG);
+		break;
+	case pipe4:
+		txBuff[0]=(W_MASK|RX_PW_P4_REG);
+		break;
+	case pipe5:
+		txBuff[0]=(W_MASK|RX_PW_P5_REG);
+		break;
+	}
+	
 	txBuff[1]=(numBytes);
 	nrf24l01_csn_low();
 	spi_transmit_receive(txBuff, rxBuff, 2);

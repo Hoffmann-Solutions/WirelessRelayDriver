@@ -15,6 +15,9 @@
 
 
 int status = 0;
+uint8_t pipe0Address[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE8};
+uint8_t pipe1Address[5] = {0xC2, 0xC2, 0xC2, 0xC2, 0xC3};
+uint8_t currPipe = 0;
 
 int main(void)
 {
@@ -27,6 +30,7 @@ int main(void)
 	setbit(PORTB, DD_SS);
 	
 #ifdef _TX
+	nrf24l01SetNumRetries(3);
 	//Setup for TX mode
 	nrf24l01_setup_tx();
 	nrf24l01_reset_tx();
@@ -35,6 +39,10 @@ int main(void)
 #endif // _TX
 
 #ifdef _RX
+	nrf24l01SetPayloadLen(pipe0, 2);
+	nrf24l01SetPayloadLen(pipe1, 2);
+	nrf24l01SetPipeAddr(pipe0, pipe0Address);
+	nrf24l01SetPipeAddr(pipe1, pipe1Address);
 	//Setup for RX mode
 	nrf24l01_setup_rx();
 	nrf24l01_reset_rx();
@@ -62,11 +70,23 @@ int main(void)
 		
 #ifdef _TX
 	//Chec the switches state
-	sendData = read_portd_gpio();
+	//sendData = read_portd_gpio();
 	//Set a dummy address
 	txBuff[0]=0xaa;
-	//Load the data to send
-	txBuff[1]=sendData;
+	//Set the send address
+	if(currPipe){
+		nrf24l01SetTXAddr(pipe1Address, 5);
+		nrf24l01SetPipeAddr(pipe1, pipe1Address, 5);
+		currPipe=0;
+		//Load the data to send
+		txBuff[1]=1;
+	}else{
+		nrf24l01SetTXAddr(pipe0Address, 5);
+		nrf24l01SetPipeAddr(pipe0, pipe0Address, 5);
+		currPipe=1;
+		txBuff[1]=2;
+	}
+
 	nrf24l01_send_data(txBuff, 2);
 	//Delay before checking
 	_delay_ms(10);
