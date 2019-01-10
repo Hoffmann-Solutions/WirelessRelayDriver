@@ -14,8 +14,6 @@
 #define INIT_PAIR_CODE	(uint8_t)0x00
 #define INIT_MODE		(uint8_t)0x00
 	
-//Define the mode of operation here
-#define _RX 1
 
 //Will initially be undefined
 #define MODE_PTX			(uint8_t)1
@@ -24,7 +22,7 @@
 //Used to distinguish if the message was for us
 uint8_t EEMEM PIPE0_ADDR[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE8};  //EERPROM default conf needs to be loaded in seperate to .hex
 uint8_t EEMEM PIPE1_ADDR[5] = {0xC2, 0xC2, 0xC2, 0xC2, 0xC3};
-uint8_t EEMEM MODE = MODE_PRX;
+uint8_t EEMEM MODE = MODE_PTX;
 
 
 //Define the pins needed for the spi interface
