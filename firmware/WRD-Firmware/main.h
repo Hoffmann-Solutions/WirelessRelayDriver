@@ -17,13 +17,14 @@
 //Define the mode of operation here
 #define _RX 1
 
-//Used to distinguish if the message was for us
-uint8_t EEMEM PairCode = INIT_PAIR_CODE;
-uint8_t EEMEM Mode = INIT_MODE;
-
 //Will initially be undefined
 #define MODE_PTX			(uint8_t)1
 #define MODE_PRX			(uint8_t)2
+
+//Used to distinguish if the message was for us
+uint8_t EEMEM PIPE0_ADDR[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE8};  //EERPROM default conf needs to be loaded in seperate to .hex
+uint8_t EEMEM PIPE1_ADDR[5] = {0xC2, 0xC2, 0xC2, 0xC2, 0xC3};
+uint8_t EEMEM MODE = MODE_PRX;
 
 
 //Define the pins needed for the spi interface
@@ -70,6 +71,12 @@ void setup_portd_gpio(uint8_t mode);
 
 uint8_t read_portd_gpio();
 void set_portd_gpio(uint8_t value);
+
+
+
+void handlePTX(uint8_t *txBuff, uint8_t *rxBuff);
+
+void handlePRX(uint8_t *rxBuff);
 
 
 
