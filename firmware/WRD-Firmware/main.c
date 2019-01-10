@@ -43,7 +43,7 @@ int main(void)
 		setup_portd_gpio(INPUT);
 	}else{
 		//Setup for RX
-		nrf24l01SetPayloadLen(pipe0, 2);
+		nrf24l01SetPayloadLen(pipe0, 3);
 		nrf24l01SetPayloadLen(pipe1, 2);
 		
 		//set the address length for pipes
@@ -252,7 +252,7 @@ void handlePTX(){
 		handlePTXBuff[0]=0xAB;
 		handlePTXBuff[1]=1;
 		handlePTXBuff[2]=MODE_PTX;
-		nrf24l01_send_data(handlePTXBuff, 2);
+		nrf24l01_send_data(handlePTXBuff, 3);
 	}
 
 	
@@ -301,7 +301,7 @@ void handlePRX(){
 				case 0:
 					//Config pipe
 					
-					nrf24l01_read_rx(handlePRXBuff, 2);
+					nrf24l01_read_rx(handlePRXBuff, 3);
 					
 					cmd = handlePRXBuff[0];
 					newAddr = handlePRXBuff[1];
