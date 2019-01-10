@@ -240,15 +240,19 @@ void handlePTX(uint8_t *txBuff, uint8_t *rxBuff){
 		currPipe=0;
 		//Load the data to send
 		txBuff[1]=1;
+		nrf24l01_send_data(txBuff, 2);
 	}else{
 		nrf24l01SetTXAddr(pipe0Address, 5);
 		nrf24l01SetPipeAddr(pipe0, pipe0Address, 5);
 		currPipe=1;
 		//Load the data
-		txBuff[1]=2;
+		txBuff[0]=CONFIG_CMD;
+		txBuff[1]=0xBC;
+		txBuff[2]=MODE_PTX;
+		nrf24l01_send_data(txBuff, 3);
 	}
 
-	nrf24l01_send_data(txBuff, 2);
+	
 	//Delay before checking
 	_delay_ms(10);
 	
@@ -274,6 +278,7 @@ void handlePTX(uint8_t *txBuff, uint8_t *rxBuff){
 }
 
 void handlePRX(uint8_t *rxBuff){
+	clear(rxBuff);
 	uint8_t nrf24l01Status = 0x00;
 	if(!(PINB&0x01)){
 		//something happened
@@ -288,6 +293,12 @@ void handlePRX(uint8_t *rxBuff){
 				case 0:
 					//Config pipe
 					nrf24l01_read_rx(rxBuff, 3);
+					if(rxBuff[0] == CONFIG_CMD){
+						//Config command received
+						uint8_t newAddr = rxBuff[1];
+						uint8_t newMode = rxBuff[2];
+						
+					}
 					break;
 				case 1:
 					//Data pipe
