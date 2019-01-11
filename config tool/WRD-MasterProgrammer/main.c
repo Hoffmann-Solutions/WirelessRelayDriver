@@ -4,11 +4,10 @@
  * Created: 1/11/2019 12:12:51 PM
  * Author : Cobus Hoffmann
  */ 
-
+#define F_CPU 8000000ul
 #include <avr/io.h>
 #include <util/delay.h>
-#include "../../library/nrf24l01.h"
-#include "../../library/serial.h"
+#include "Drivers2/serial.h"
 
 
 int main(void)
@@ -31,6 +30,9 @@ int main(void)
 			serialPrintLn("Received:");
 			serialPrintLn(myBuffer);
 		}
+		_delay_ms(1000);
+		serialTransmitByte('H');
+		serialTransmitByte('\n');
     }
 }
 
