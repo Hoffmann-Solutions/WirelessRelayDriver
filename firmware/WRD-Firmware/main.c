@@ -11,7 +11,7 @@
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
 #include "main.h"
-#include "nrf24l01.h"
+#include "../../library/nrf24l01.h"
 
 
 int status = 0;
@@ -242,7 +242,7 @@ void handlePTX(){
 		nrf24l01SetPipeAddr(pipe1, pipe1Address, 5);
 		currPipe=0;
 		//Load the data to send
-		handlePTXBuff[1]=0;
+		handlePTXBuff[1]=(1<<4);
 		nrf24l01_send_data(handlePTXBuff, 2);
 	}else{
 		nrf24l01SetTXAddr(pipe0Address, 5);
