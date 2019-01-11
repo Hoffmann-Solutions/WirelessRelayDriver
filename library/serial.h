@@ -3,6 +3,8 @@
  *
  * Created: 1/11/2019 12:16:37 PM
  *  Author: Cobus Hoffmann
+ *
+ *	Testing the link
  */ 
 
 
@@ -11,7 +13,9 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#define SERIAL_FOSC					8000000ul
+#define FOSC 16000000 // Clock Speed
+#define BAUD 9600
+#define MYUBRR (unsigned int) (FOSC/16/BAUD-1)
 
 /**
  * \brief This method is used to initialise the serial interface
@@ -21,7 +25,7 @@
  * 
  * \return void
  */
-void serialInit(unsigned int baud);
+void serialInit(unsigned int ubrr);
 
 
 /**
@@ -34,6 +38,14 @@ void serialInit(unsigned int baud);
  */
 void serialTransmitByte(unsigned char data);
 
+/**
+ * \brief This function is used to print a '\0' terminated string 
+ * via the serial interface
+ * 
+ * 
+ * \return void
+ */
+void serialPrint(char* string);
 
 /**
  * \brief This function is used to transmit a '\0' terminated
@@ -43,7 +55,9 @@ void serialTransmitByte(unsigned char data);
  * 
  * \return void
  */
-void serialPrintLn(unsigned char* string);
+void serialPrintLn(char* string);
+
+
 
 
 /**
@@ -53,7 +67,7 @@ void serialPrintLn(unsigned char* string);
  * 
  * \return unsigned char
  */
-unsigned char serialReceiveByte();
+char serialReceiveByte();
 
 
 /**
