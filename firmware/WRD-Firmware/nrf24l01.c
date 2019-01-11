@@ -191,10 +191,6 @@ void nrf24l01_send_data(uint8_t *txData, uint8_t numBytes){
 	clear(nrf24l01TxBuff);
 	clear(nrf24l01RxBuff);
 
-	//Clear the buffers
-	clear(nrf24l01TxBuff);
-	clear(nrf24l01RxBuff);
-
 	//copy the new content into the txBuff
 	nrf24l01TxBuff[0]=(W_TX_PAYLOAD);
 	memcpy(nrf24l01TxBuff+sizeof(uint8_t), txData, numBytes);
@@ -234,7 +230,7 @@ uint8_t nrf24l01_get_config(){
 }
 
 uint8_t nrf24l01_write_reg(uint8_t reg, uint8_t *data, uint8_t numBytes){
-
+	//Clear the nrf24l01 buffs
 	clear(nrf24l01RxBuff);
 	clear(nrf24l01TxBuff);
 
@@ -249,7 +245,10 @@ uint8_t nrf24l01_write_reg(uint8_t reg, uint8_t *data, uint8_t numBytes){
 }
 
 uint8_t nrf24l01_read_reg(uint8_t reg, uint8_t *buff, uint8_t numBytes){
-
+	//Clear the nrf24l01 buffs
+	clear(nrf24l01RxBuff);
+	clear(nrf24l01TxBuff);
+	//Set the read mask and what reg
 	nrf24l01TxBuff[0]=(R_MASK)|(reg);
 
 	nrf24l01_csn_low();
@@ -264,10 +263,11 @@ uint8_t nrf24l01_read_reg(uint8_t reg, uint8_t *buff, uint8_t numBytes){
 
 
 uint8_t nrf24l01_read_rx(char *buff, uint8_t numBytes){
-
+	//Clear the nrf24l01 buffs
+	clear(nrf24l01RxBuff);
+	clear(nrf24l01TxBuff);
+	//Set the read RX Payload command
 	nrf24l01TxBuff[0]=(R_RX_PAYLOAD);
-
-
 	nrf24l01_csn_low();
 	spi_transmit_receive(nrf24l01TxBuff, nrf24l01RxBuff, numBytes+1);
 	nrf24l01_csn_high();

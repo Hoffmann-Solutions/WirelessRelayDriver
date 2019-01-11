@@ -56,7 +56,7 @@ void spi_init(void);
 //Transmit a single char
 void spi_transmit(char cData);
 //Transmit and receive a number of bytes
-void spi_transmit_receive(uint8_t *txBuff, char *buff, uint8_t numBytes);
+void spi_transmit_receive(uint8_t *txBuff, uint8_t* buff, uint8_t numBytes);
 
 //Enable and disable the nrf24l01 module
 void nrf24l01_ce_low();			//Activate RX TX modes functions required by the nrf24l01 lib

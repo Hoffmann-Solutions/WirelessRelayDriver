@@ -116,7 +116,7 @@ void spi_transmit(char cData)
 			
  * @retval None
  */
-void spi_transmit_receive(uint8_t *txBuff, char *buff, uint8_t numBytes){
+void spi_transmit_receive(uint8_t* txBuff, uint8_t* buff, uint8_t numBytes){
 	
 	for(uint8_t i=0; i<numBytes; i++){
 			/* Start transmission */
@@ -286,8 +286,9 @@ void handlePRX(){
 	uint8_t newAddr = 0;
 	uint8_t newMode = 0;
 	uint8_t relayValues =0;
-	char handlePRXBuff[4]={};
+	uint8_t handlePRXBuff[4]={};
 	uint8_t handlePTXBuff[4]={};
+		
 	if(!(PINB&0x01)){
 		//something happened
 		nrf24l01Status = nrf24l01_get_status();

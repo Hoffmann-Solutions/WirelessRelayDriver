@@ -23,7 +23,7 @@ extern void wait_10us();
 
 extern void spi_init();
 extern void spi_transmit(char cData);
-extern void spi_transmit_receive(uint8_t *txBuff, char *buff, uint8_t numBytes);
+extern void spi_transmit_receive(uint8_t *txBuff, uint8_t* buff, uint8_t numBytes);
 
 /*******************Includes************************/
 
