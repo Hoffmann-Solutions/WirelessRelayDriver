@@ -48,6 +48,14 @@ void nrf24l01_csn_high();
 
 void wait_10us();				//Wait function required by the nrf24l01 lib
 
+/**
+ * \brief This function i used to querry if the message has been sent sucessfully or not
+ * 
+ * 
+ * \return uint8_t 1:Sent 2:Max Retries 9:Unknown Error
+ */
+uint8_t nrf24l01MessageSent();
+
 
 
 

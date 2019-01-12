@@ -91,6 +91,24 @@ int main(void)
 				itoa(myMode, str, 10);
 				serialPrintLn(str);
 				
+			}else if(!strncmp(SEND_CMD, myBuffer, strlen(SEND_CMD))){
+				//Send the config to default pipe0
+				nrf24l01_send_data(txBuffer, 3);
+				_delay_ms(10);
+				uint8_t sentStatus = nrf24l01MessageSent();
+				switch(sentStatus){
+					case 1:
+						serialPrintLn("> Message sent");
+						break;
+					case 2:
+						serialPrintLn("> Max Retries");
+						break;
+					default:
+						serialPrintLn("Check connections");
+						break;
+					
+				}
+				
 			}else if(!strncmp(CHECK_OK_CMD, myBuffer, strlen(CHECK_OK_CMD))){
 			//Check command
 			serialPrintLn("OK");
@@ -214,6 +232,31 @@ void nrf24l01_csn_high(){
  */
 void wait_10us(){
 	_delay_us(10);
+}
+
+uint8_t nrf24l01MessageSent(){
+	unsigned char handlePRXBuff[10];
+	memset(handlePRXBuff, 0, sizeof(handlePRXBuff));
+	uint8_t status = 0;
+	
+	if(!(PINB&0x01)){
+		//The IRQ pin is low
+		nrf24l01_read_reg(0x07, handlePRXBuff, 1);
+		if(0x01&(handlePRXBuff[0]>>5)){
+			//Data sent successfully
+			status = 1;
+			}else if(0x01&(handlePRXBuff[0]>>4)){
+			//Max retries
+			status = 2;
+		}
+		//Reset the tx
+		nrf24l01_reset_tx();
+		}else{
+		status = 9;
+		nrf24l01_read_reg(0x07, handlePRXBuff, 1);
+	}
+	
+	return status;
 }
 
 
