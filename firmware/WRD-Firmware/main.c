@@ -11,7 +11,7 @@
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
 #include "main.h"
-#include "../../library/nrf24l01.h"
+#include "nrf24l01.h"
 
 
 int status = 0;
@@ -305,18 +305,19 @@ void handlePRX(){
 					nrf24l01_read_rx(handlePRXBuff, 3);
 					
 					cmd = handlePRXBuff[0];
-					newAddr = handlePRXBuff[1];
 
 					if(handlePRXBuff[0] == CONFIG_CMD){
 						//Config command received
-						relayValues = handlePRXBuff[1];
+						newAddr = handlePRXBuff[1];
 						newMode = handlePRXBuff[2];
 						//Update the EEPROM registers
-						//pipe1Address[5] = newAddr;
-						//myMode = newMode;
-						//eeprom_write_block(pipe1Address, PIPE1_ADDR, 5);
-						//eeprom_write_byte(&MODE, myMode);
-						set_portd_gpio(relayValues);
+						pipe1Address[5] = newAddr;
+						myMode = newMode;
+						eeprom_write_block(pipe1Address, PIPE1_ADDR, 5);
+						eeprom_write_byte(&MODE, myMode);
+					}else if(cmd == PING_CMD){
+						//Tod do implement the ping cmd
+							
 					}else{
 						//Not CMD
 						status =99;

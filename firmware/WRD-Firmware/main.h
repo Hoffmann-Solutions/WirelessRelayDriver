@@ -21,6 +21,7 @@
 
 //Define the command code
 #define CONFIG_CMD			(uint8_t)0xAB
+#define PING_CMD			(uint8_t)0xCC
 
 //Used to distinguish if the message was for us
 uint8_t EEMEM PIPE0_ADDR[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE8};  //EERPROM default conf needs to be loaded in seperate to .hex
