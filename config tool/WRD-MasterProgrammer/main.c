@@ -39,7 +39,7 @@ int main(void)
 	serialInit(MYUBRR);
 	char myBuffer[20];
 	volatile char myFlag = 0;
-	
+	//clear tehe buffer
 	memset(myBuffer, '\0', sizeof(myBuffer));
 	//Set buffer and flag for the serial stuff
 	serialSetRxBuffer(myBuffer);
