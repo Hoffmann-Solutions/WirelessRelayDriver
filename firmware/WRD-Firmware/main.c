@@ -41,6 +41,10 @@ int main(void)
 		nrf24l01_setup_tx();
 		nrf24l01_reset_tx();
 		setup_portd_gpio(INPUT);
+		//Set the receiver address
+		nrf24l01SetPipeAddr(pipe0, pipe1Address);
+		nrf24l01SetTXAddr(pipe1Address, 5);
+		
 	}else{
 		//Setup for RX
 		nrf24l01SetPayloadLen(pipe0, 3);
@@ -126,9 +130,6 @@ void spi_transmit_receive(uint8_t* txBuff, uint8_t* buff, uint8_t numBytes){
 			;
 			buff[i]=SPDR;
 	}
-	
-	
-	
 }
 
 
@@ -181,8 +182,6 @@ void nrf24l01_csn_low(){
  */
 void nrf24l01_csn_high(){
 	PORTB |= (1<<DD_SS);
-	
-	
 }
 
 /**
@@ -231,52 +230,33 @@ void set_portd_gpio(uint8_t value){
 void handlePTX(){
 	char handlePRXBuff[4]={};
 	uint8_t handlePTXBuff[4]={};
+	uint8_t sendData = 0;
 	
-//Check the switches state
-	//sendData = read_portd_gpio();
+	//Check the switches states
+	sendData = read_portd_gpio();
 	//Set a dummy address
 	handlePTXBuff[0]=0xaa;
 	//Set the send address
-	if(currPipe){
-		nrf24l01SetTXAddr(pipe1Address, 5);
-		nrf24l01SetPipeAddr(pipe1, pipe1Address, 5);
-		currPipe=0;
-		//Load the data to send
-		handlePTXBuff[1]=(1<<4);
-		nrf24l01_send_data(handlePTXBuff, 2);
-	}else{
-		nrf24l01SetTXAddr(pipe0Address, 5);
-		nrf24l01SetPipeAddr(pipe0, pipe0Address, 5);
-		currPipe=1;
-		//Load the data
-		handlePTXBuff[0]=TEST_CMD;
-		handlePTXBuff[1]=1;
-		handlePTXBuff[2]=MODE_PTX;
-		nrf24l01_send_data(handlePTXBuff, 3);
-	}
-
-	
+	//Load the data to send
+	handlePTXBuff[1]=sendData;
+	nrf24l01_send_data(handlePTXBuff, 2);
 	//Delay before checking
 	_delay_ms(10);
-	
+
 	if(!(PINB&0x01)){
 		//The IRQ pin is low
 		nrf24l01_read_reg(0x07, handlePRXBuff, 1);
 		if(0x01&(handlePRXBuff[0]>>5)){
-			//Data sent successfully
+			//Data sent successfully, turn off bad-link led
 			status = 1;
 		}else if(0x01&(handlePRXBuff[0]>>4)){
-			//Max retries
+			//Max retries turn on bad-link led
 			status = 2;
 		}
 		//Reset the tx
 		nrf24l01_reset_tx();
-		}else{
-		status = 9;
-		nrf24l01_read_reg(0x07, handlePRXBuff, 1);
+		}
 	}
-	//*****************Extra delay for debugging
-	_delay_ms(1000);
 	
 }
 
@@ -301,11 +281,8 @@ void handlePRX(){
 			switch(dataPipeNum){
 				case 0:
 					//Config pipe
-					
 					nrf24l01_read_rx(handlePRXBuff, 3);
-					
 					cmd = handlePRXBuff[0];
-
 					if(handlePRXBuff[0] == CONFIG_CMD){
 						//Config command received
 						newAddr = handlePRXBuff[1];
@@ -315,6 +292,7 @@ void handlePRX(){
 						myMode = newMode;
 						eeprom_write_block(pipe1Address, PIPE1_ADDR, 5);
 						eeprom_write_byte(&MODE, myMode);
+						//Must restart for effect to take place
 					}else if(cmd == TEST_CMD){
 						//Testing
 						relayValues = handlePRXBuff[1];

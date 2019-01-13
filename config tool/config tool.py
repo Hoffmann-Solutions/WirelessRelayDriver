@@ -2,7 +2,7 @@ import tkinter
 import serial
 ser = serial.Serial()
 ser.baudrate = '9600'
-ser.port = 'COM4'
+ser.port = 'COM13'
 ser.open()
 print (ser.is_open)
     
