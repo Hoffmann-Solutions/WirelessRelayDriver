@@ -66,6 +66,7 @@ int main(void)
 		{
 			//Serial data has been received
 			serialPrint("> ");
+			_delay_ms(10);
 			serialPrintLn(myBuffer);
 			myFlag = 0;
 			//Check if the command received matches SET_ADDR_CMD
