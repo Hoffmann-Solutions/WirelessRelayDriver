@@ -22,11 +22,12 @@
 //Define the command code
 #define CONFIG_CMD			(uint8_t)0xAB
 #define PING_CMD			(uint8_t)0xCC
+#define TEST_CMD			(uint8_t)0xCD
 
 //Used to distinguish if the message was for us
 uint8_t EEMEM PIPE0_ADDR[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE8};  //EERPROM default conf needs to be loaded in seperate to .hex
-uint8_t EEMEM PIPE1_ADDR[5] = {0xC2, 0xC2, 0xC2, 0xC2, 0xC3};
-uint8_t EEMEM MODE = MODE_PTX;
+uint8_t EEMEM PIPE1_ADDR[5] = {0xC2, 0xC2, 0xC2, 0xC2, 0xC2}; //C3 is original
+uint8_t EEMEM MODE = MODE_PRX;
 
 
 //Define the pins needed for the spi interface

@@ -249,7 +249,7 @@ void handlePTX(){
 		nrf24l01SetPipeAddr(pipe0, pipe0Address, 5);
 		currPipe=1;
 		//Load the data
-		handlePTXBuff[0]=0xAB;
+		handlePTXBuff[0]=TEST_CMD;
 		handlePTXBuff[1]=1;
 		handlePTXBuff[2]=MODE_PTX;
 		nrf24l01_send_data(handlePTXBuff, 3);
@@ -311,12 +311,14 @@ void handlePRX(){
 						newAddr = handlePRXBuff[1];
 						newMode = handlePRXBuff[2];
 						//Update the EEPROM registers
-						pipe1Address[5] = newAddr;
+						pipe1Address[4] = newAddr;
 						myMode = newMode;
 						eeprom_write_block(pipe1Address, PIPE1_ADDR, 5);
 						eeprom_write_byte(&MODE, myMode);
-					}else if(cmd == PING_CMD){
-						//Tod do implement the ping cmd
+					}else if(cmd == TEST_CMD){
+						//Testing
+						relayValues = handlePRXBuff[1];
+						set_portd_gpio(relayValues);
 							
 					}else{
 						//Not CMD
